@@ -14,4 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> { // <�
     Optional<Account> findFirstByOrderByIdDesc(); // 첫번째 가져오기 정리순서는 desc(역순) 맨 뒤에 것
 
     Integer countByAccountUser(AccountUser accountUser);
+
+    Optional<Account> findByAccountNumber(String AccountNumber);
 }
