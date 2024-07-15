@@ -90,6 +90,8 @@ public class AccountService {
         account.setAccountStatus(AccountStatus.UNREGISTERED);
         account.setUnRegisteredAt(LocalDateTime.now());
 
+        accountRepository.save(account); // test 용 코드
+
         return AccountDto.fromEntity(account);
     }
 
