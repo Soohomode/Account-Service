@@ -2,6 +2,7 @@ package com.example.Account.service;
 
 import com.example.Account.domain.Account;
 import com.example.Account.domain.AccountUser;
+import com.example.Account.domain.Transaction;
 import com.example.Account.dto.TransactionDto;
 import com.example.Account.exception.AccountException;
 import com.example.Account.repository.AccountRepository;
@@ -9,12 +10,20 @@ import com.example.Account.repository.AccountUserRepository;
 import com.example.Account.repository.TransactionRepository;
 import com.example.Account.type.AccountStatus;
 import com.example.Account.type.ErrorCode;
+import com.example.Account.type.TransactionResultType;
+import com.example.Account.type.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
+
+import static com.example.Account.type.TransactionResultType.F;
+import static com.example.Account.type.TransactionResultType.S;
+import static com.example.Account.type.TransactionType.USE;
 
 @Slf4j
 @Service
@@ -41,6 +50,11 @@ public class TransactionService {
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         validateUseBalance(user, account, amount);
+
+        // 이 useBalance 메서드는 잔액 -= 가격 이다.
+        account.useBalance(amount); // 이 useBalance 메서드는 Account 엔티티에 선언된 메서드이다
+
+        return TransactionDto.fromEntity(saveAndGetTransaction(S, account, amount));
     }
 
     // 확인 검증 작업
@@ -57,5 +71,32 @@ public class TransactionService {
         if (account.getBalance() < amount) {
             throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
         }
+
+    }
+
+    // 결제 실패 
+    @Transactional
+    public void saveFailedUseTransaction(String accountNumber, Long amount) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                // 계좌가 없다면
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        saveAndGetTransaction(F, account, amount);
+    }
+
+    private Transaction saveAndGetTransaction(
+            TransactionResultType transactionResultType, Account account, Long amount) {
+
+        return transactionRepository.save(
+                Transaction.builder()
+                        .transactionType(USE)
+                        .transactionResultType(transactionResultType)
+                        .account(account)
+                        .amount(amount)
+                        .balanceSnapshot(account.getBalance())
+                        .transactionId(UUID.randomUUID().toString().replace("-", ""))
+                        .transactedAt(LocalDateTime.now())
+                        .build()
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.example.Account.dto;
 
+import com.example.Account.domain.Transaction;
 import com.example.Account.type.TransactionResultType;
 import com.example.Account.type.TransactionType;
 import lombok.*;
@@ -26,4 +27,16 @@ public class TransactionDto {
     private String transactionId;
     // 거래 일시
     private LocalDateTime transactedAt;
+
+    public static TransactionDto fromEntity(Transaction transaction) {
+        return TransactionDto.builder()
+                .accountNumber(transaction.getAccount().getAccountNumber())
+                .transactionType(transaction.getTransactionType())
+                .transactionResultType(transaction.getTransactionResultType())
+                .amount(transaction.getAmount())
+                .balanceSnapshot(transaction.getBalanceSnapshot())
+                .transactionId(transaction.getTransactionId())
+                .transactedAt(transaction.getTransactedAt())
+                .build();
+    }
 }

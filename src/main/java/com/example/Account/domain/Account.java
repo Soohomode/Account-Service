@@ -1,6 +1,8 @@
 package com.example.Account.domain;
 
+import com.example.Account.exception.AccountException;
 import com.example.Account.type.AccountStatus;
+import com.example.Account.type.ErrorCode;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,4 +40,13 @@ public class Account { // 자바 객체 클래스 처럼 보이지만 설정 클
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    // 중요한 데이터를 변경하는 로직은 객체 안에서 직접 수행 할수있도록 하는 편이 안전하다.
+    public void useBalance(Long amount) {
+        if (amount > balance) { // 가격이 잔액보다 큰 경우
+            throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
+        }
+
+        balance -= amount; // 잔액에 가격을 빼서 잔액에 저장
+    }
 }
