@@ -49,4 +49,13 @@ public class Account { // 자바 객체 클래스 처럼 보이지만 설정 클
 
         balance -= amount; // 잔액에 가격을 빼서 잔액에 저장
     }
+
+    // 중요한 데이터를 변경하는 로직은 객체 안에서 직접 수행 할수있도록 하는 편이 안전하다.
+    public void cancelBalance(Long amount) {
+        if (amount < 0) { // 캔슬할때 가격이 0보다 작으면 X
+            throw new AccountException(ErrorCode.INVALID_REQUEST);
+        }
+
+        balance += amount; // 잔액에 가격을 더해서 잔액에 저장
+    }
 }

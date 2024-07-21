@@ -14,4 +14,5 @@ import java.util.Optional;
 public interface TransactionRepository
         extends JpaRepository<Transaction, Long> { // <레포지토리가 활용하게될 엔티티, 엔티티의 PK 의 타입>
 
+    Optional<Transaction> findByTransactionId(String transactionId);
 }
