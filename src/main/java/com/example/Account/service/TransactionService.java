@@ -82,7 +82,7 @@ public class TransactionService {
                 // 계좌가 없다면
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        saveAndGetTransaction(USE,F, account, amount);
+        saveAndGetTransaction(USE, F, account, amount);
     }
 
     private Transaction saveAndGetTransaction(
@@ -141,6 +141,14 @@ public class TransactionService {
                 // 계좌가 없다면
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        saveAndGetTransaction(CANCEL,F, account, amount);
+        saveAndGetTransaction(CANCEL, F, account, amount);
+    }
+
+    public TransactionDto queryTransaction(String transactionId) {
+
+        return TransactionDto.fromEntity(
+                transactionRepository.findByTransactionId(transactionId)
+                        .orElseThrow(() -> new AccountException(ErrorCode.TRANSACTION_NOT_FOUND))
+        );
     }
 }
