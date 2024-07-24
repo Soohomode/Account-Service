@@ -17,11 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity // 일종의 설정 클래스
-@EntityListeners(AuditingEntityListener.class)
-public class Transaction {
-    @Id // pk primary key
-    @GeneratedValue
-    private Long id;
+public class Transaction extends BaseEntity {
 
     // 거래의 종류(사용, 사용취소)
     @Enumerated(EnumType.STRING)
@@ -44,11 +40,4 @@ public class Transaction {
     private String transactionId;
     // 거래 일시
     private LocalDateTime transactedAt;
-
-    // 생성 일시
-    @CreatedDate
-    private LocalDateTime createdAt;
-    // 최종 수정 일시
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 }

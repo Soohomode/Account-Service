@@ -41,8 +41,8 @@ class AccountServiceTest {
     void createAccountSuccess() {
         //given
         AccountUser user = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        user.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.findFirstByOrderByIdDesc())
@@ -68,8 +68,8 @@ class AccountServiceTest {
     void createFirstSuccess() {
         //given
         AccountUser user = AccountUser.builder()
-                .id(15L)
                 .name("Pobi").build();
+        user.setId(15L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.findFirstByOrderByIdDesc())
@@ -111,8 +111,8 @@ class AccountServiceTest {
     void createAccount_maxAccountIs10() { // 최대 계좌는 1인 10개
         //given
         AccountUser user = AccountUser.builder()
-                .id(15L)
                 .name("Pobi").build();
+        user.setId(15L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.countByAccountUser(any()))
@@ -132,8 +132,8 @@ class AccountServiceTest {
     void deleteAccountSuccess() { // 계좌 해지 성공 케이스
         //given
         AccountUser user = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        user.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.findByAccountNumber(anyString()))
@@ -175,8 +175,8 @@ class AccountServiceTest {
     void deleteAccount_AccountNotFound() {
         //given
         AccountUser user = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        user.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.findByAccountNumber(anyString()))
@@ -195,11 +195,11 @@ class AccountServiceTest {
     void deleteAccountFailed_userUnMatch() {
         //given
         AccountUser Pobi = AccountUser.builder() // 유저 1
-                .id(12L)
                 .name("Pobi").build();
+        Pobi.setId(12L);
         AccountUser Yuri = AccountUser.builder() // 유저 2
-                .id(13L)
                 .name("Yuri").build();
+        Yuri.setId(13L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(Pobi)); // 포비였는데
         given(accountRepository.findByAccountNumber(anyString()))
@@ -221,8 +221,8 @@ class AccountServiceTest {
     void deleteAccountFailed_balanceNotEmpty() {
         //given
         AccountUser Pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        Pobi.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(Pobi)); // 포비
         given(accountRepository.findByAccountNumber(anyString()))
@@ -244,8 +244,8 @@ class AccountServiceTest {
     void deleteAccountFailed_alreadyUnRegistered() {
         //given
         AccountUser Pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        Pobi.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(Pobi)); // 포비
         given(accountRepository.findByAccountNumber(anyString()))
@@ -267,8 +267,8 @@ class AccountServiceTest {
     void successGetAccountsByUserId() {
         //given
         AccountUser Pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        Pobi.setId(12L);
         List<Account> accounts = Arrays.asList(
                 Account.builder()
                         .accountUser(Pobi)

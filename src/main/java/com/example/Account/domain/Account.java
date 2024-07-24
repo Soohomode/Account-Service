@@ -18,10 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity // 일종의 설정 클래스
 @EntityListeners(AuditingEntityListener.class)
-public class Account { // 자바 객체 클래스 처럼 보이지만 설정 클래스이다 테이블을 만드는것이다
-    @Id // pk primary key
-    @GeneratedValue
-    private Long id;
+public class Account extends BaseEntity { // 자바 객체 클래스 처럼 보이지만 설정 클래스이다 테이블을 만드는것이다
 
     @ManyToOne
     private AccountUser accountUser;
@@ -35,11 +32,6 @@ public class Account { // 자바 객체 클래스 처럼 보이지만 설정 클
 
     private LocalDateTime registeredAt;
     private LocalDateTime unRegisteredAt;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     // 중요한 데이터를 변경하는 로직은 객체 안에서 직접 수행 할수있도록 하는 편이 안전하다.
     public void useBalance(Long amount) {

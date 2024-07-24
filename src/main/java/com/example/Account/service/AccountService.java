@@ -38,8 +38,7 @@ public class AccountService {
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) { // userId와 initialBalance 로 계좌 생성
 
-        AccountUser accountUser = accountUserRepository.findById(userId) // 조회를 했을때, 나오는 디폴트 타입은 Optional
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         validateCreateAccount(accountUser);
 
@@ -82,8 +81,7 @@ public class AccountService {
     public AccountDto deleteAccount(Long userId, String accountNumber) {
         // 조회를 했을때, 나오는 디폴트 타입은 Optional
         // 사용자가 없는 경우
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
         // 계좌가 없는 경우
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
@@ -97,6 +95,12 @@ public class AccountService {
         accountRepository.save(account); // test 용 코드
 
         return AccountDto.fromEntity(account);
+    }
+
+    private AccountUser getAccountUser(Long userId) {
+        AccountUser accountUser = accountUserRepository.findById(userId)
+                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        return accountUser;
     }
 
     private void validateDeleteAccount(AccountUser accountUser, Account account) {
@@ -116,8 +120,7 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> getAccountsByUserId(Long userId) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         List<Account> accounts = accountRepository.findByAccountUser(accountUser);
 
